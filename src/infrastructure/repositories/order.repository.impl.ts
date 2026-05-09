@@ -141,22 +141,36 @@ export class OrderRepository implements IOrderRepository {
     try {
       await transaction.begin();
 
-      // 1. Get Order Items to know what to compensate
-      const itemsResult = await transaction.request()
+      // 1. Update Order Status (only if still Pending — prevents double compensation)
+      const updateResult = await transaction.request()
         .input('orderId', sql.UniqueIdentifier, orderId)
-        .query('SELECT TicketCategoryId, Quantity FROM OrderItems WHERE OrderId = @orderId');
+        .query(`
+          UPDATE Orders SET Status = 'Expired' WHERE Id = @orderId AND Status = 'Pending';
+          SELECT @@ROWCOUNT as AffectedRows;
+        `);
 
-      // 2. Update Order Status
-      await transaction.request()
-        .input('orderId', sql.UniqueIdentifier, orderId)
-        .query("UPDATE Orders SET Status = 'Expired' WHERE Id = @orderId AND Status = 'Pending'");
+      const affected = updateResult.recordset[0]?.AffectedRows ?? 0;
 
-      // 3. Compensate stock
-      for (const item of itemsResult.recordset) {
-        await transaction.request()
-          .input('categoryId', sql.Int, item.TicketCategoryId)
-          .input('quantity', sql.Int, item.Quantity)
-          .query('UPDATE TicketCategories SET AvailableQuantity = AvailableQuantity + @quantity WHERE Id = @categoryId');
+      // 2. Only compensate stock if we actually changed the status
+      if (affected > 0) {
+        const itemsResult = await transaction.request()
+          .input('orderId', sql.UniqueIdentifier, orderId)
+          .query('SELECT TicketCategoryId, Quantity FROM OrderItems WHERE OrderId = @orderId');
+
+        for (const item of itemsResult.recordset) {
+          // Cap AvailableQuantity at TotalQuantity to prevent overflow
+          await transaction.request()
+            .input('categoryId', sql.Int, item.TicketCategoryId)
+            .input('quantity', sql.Int, item.Quantity)
+            .query(`
+              UPDATE TicketCategories 
+              SET AvailableQuantity = CASE
+                WHEN AvailableQuantity + @quantity > TotalQuantity THEN TotalQuantity
+                ELSE AvailableQuantity + @quantity
+              END
+              WHERE Id = @categoryId
+            `);
+        }
       }
 
       await transaction.commit();
