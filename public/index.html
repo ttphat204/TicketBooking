@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,9 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.1);
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
         }
 
         * {
@@ -49,14 +52,14 @@
         
         p.subtitle {
             color: var(--text-muted);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
 
         .container {
             display: flex;
             gap: 2rem;
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
             flex-wrap: wrap;
             justify-content: center;
@@ -75,13 +78,17 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card.full-width {
+            max-width: 920px;
         }
 
         h2 {
@@ -133,15 +140,26 @@
             font-weight: 600;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.1s;
-            margin-top: 1rem;
         }
 
-        button:hover {
-            opacity: 0.9;
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            margin-top: 0;
         }
 
-        button:active {
-            transform: scale(0.98);
+        .btn-cancel {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            margin-top: 0;
         }
 
         #result-box {
@@ -150,9 +168,9 @@
             border-radius: 8px;
             padding: 1rem;
             font-family: monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #a7f3d0;
-            min-height: 100px;
+            min-height: 80px;
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow-y: auto;
@@ -176,30 +194,121 @@
         .error-text { color: #f87171 !important; }
         .success-text { color: #34d399 !important; }
 
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+        .status-confirmed { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+        .status-expired { background: rgba(248, 113, 113, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+        .status-cancelled { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+        /* Order list */
+        .order-item {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: border-color 0.2s;
+        }
+        .order-item:hover { border-color: rgba(255,255,255,0.2); }
+        .order-item .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-item .order-id {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .order-item .order-amount {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .order-item .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .order-item .order-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Countdown timer */
+        .countdown {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--warning);
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); }
         ::-webkit-scrollbar-thumb { background: var(--surface-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Flow diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .flow-step.active { background: rgba(59, 130, 246, 0.3); border: 1px solid var(--primary); color: var(--primary); }
+        .flow-step.done { background: rgba(52, 211, 153, 0.2); border: 1px solid var(--success); color: var(--success); }
+        .flow-step.waiting { background: rgba(148, 163, 184, 0.1); border: 1px solid var(--border); color: var(--text-muted); }
+        .flow-arrow { color: var(--text-muted); font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-    <h1>Ticket Booking V2</h1>
-    <p class="subtitle">Experience High-Concurrency Booking Simulation</p>
+    <h1>Ticket Booking</h1>
+    <p class="subtitle">Hệ thống đặt vé xử lý đồng thời cao</p>
+
+    <!-- Flow Diagram -->
+    <div class="flow-diagram" style="margin-bottom: 1.5rem;">
+        <div class="flow-step active" id="flow-step-1">① Chọn vé</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step waiting" id="flow-step-2">② Đặt vé (Pending)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step waiting" id="flow-step-3">③ Thanh toán</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step waiting" id="flow-step-4">④ Xác nhận (Confirmed)</div>
+    </div>
 
     <div class="container">
         <!-- Event Info Card -->
         <div class="card" id="events-card">
-            <h2>Danh sách vé</h2>
+            <h2>🎵 Danh sách vé</h2>
             <div id="concert-list">
-                <div style="text-align: center; color: var(--text-muted);"><div class="loader"></div> Loading...</div>
+                <div style="text-align: center; color: var(--text-muted);"><div class="loader"></div> Đang tải...</div>
             </div>
         </div>
 
         <!-- Booking Form Card -->
         <div class="card">
-            <h2>Quản lý đặt vé</h2>
+            <h2>🎫 Đặt vé</h2>
             
             <div class="form-group">
                 <label>Mã số KH</label>
@@ -217,31 +326,79 @@
             </div>
 
             <div class="form-group">
-                <label>Mã giảm giá(Tùy chọn)</label>
-                <input type="text" id="voucherCode" placeholder="e.g. GIAM200K" value="GIAM200K">
+                <label>Mã giảm giá (Tùy chọn)</label>
+                <input type="text" id="voucherCode" placeholder="VD: GIAM200K" value="GIAM200K">
             </div>
 
             <div class="form-group">
-                <label>Mã giao dịch</label>
+                <label>Mã giao dịch (Tự sinh)</label>
                 <input type="text" id="idempotencyKey" readonly style="color: var(--text-muted); font-size: 0.8rem;">
             </div>
 
-            <button id="book-btn" onclick="submitOrder()">Đặt vé</button>
+            <button id="book-btn" onclick="submitOrder()">🛒 Đặt vé</button>
             
-            <h3 style="font-size: 1rem; margin-top: 1rem; color: var(--text-muted);">Phản hồi</h3>
+            <h3 style="font-size: 1rem; margin-top: 0.5rem; color: var(--text-muted);">Phản hồi</h3>
             <div id="result-box">Đang chờ...</div>
+        </div>
+    </div>
+
+    <!-- Order Management Section -->
+    <div class="container" style="margin-top: 2rem;">
+        <div class="card full-width">
+            <h2>📋 Quản lý đơn hàng</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Đơn hàng Pending có 3 phút để thanh toán trước khi tự động hủy.</p>
+            <div id="order-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">Chưa có đơn hàng nào. Hãy đặt vé trước!</div>
+            </div>
         </div>
     </div>
 
     <script>
         const API_BASE = '/api';
+        let currentOrders = [];
+        let countdownInterval = null;
 
-        // Generate a random idempotency key on load
+        // Generate a random idempotency key
         function generateIdempotencyKey() {
             return 'req-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
         }
 
         document.getElementById('idempotencyKey').value = generateIdempotencyKey();
+
+        // Update flow diagram
+        function updateFlowDiagram(step) {
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById(`flow-step-${i}`);
+                if (i < step) el.className = 'flow-step done';
+                else if (i === step) el.className = 'flow-step active';
+                else el.className = 'flow-step waiting';
+            }
+        }
+
+        // Format currency
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+        }
+
+        // Format countdown timer
+        function getCountdown(expiresAt) {
+            const diff = new Date(expiresAt).getTime() - Date.now();
+            if (diff <= 0) return { text: 'Hết hạn', expired: true };
+            const mins = Math.floor(diff / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            return { text: `⏱ ${mins}:${secs.toString().padStart(2, '0')}`, expired: false };
+        }
+
+        // Get status badge class
+        function getStatusBadge(status) {
+            const map = {
+                'Pending': 'status-pending',
+                'Confirmed': 'status-confirmed',
+                'Expired': 'status-expired',
+                'Cancelled': 'status-cancelled'
+            };
+            return `<span class="status-badge ${map[status] || ''}">${status}</span>`;
+        }
 
         // Fetch concerts and categories
         async function fetchConcerts() {
@@ -259,35 +416,34 @@
                     const cRes = await fetch(`${API_BASE}/concerts/${concert.id}`);
                     const cDetails = await cRes.json();
                     
-                    // Render UI Info
                     const html = `
                         <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border);">
-                            <h3 style="color: var(--primary);">${cDetails.title}</h3>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">${cDetails.location} - ${new Date(cDetails.eventDate).toLocaleDateString()}</p>
+                            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">${cDetails.title}</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">📍 ${cDetails.location} — 📅 ${new Date(cDetails.eventDate).toLocaleDateString('vi-VN')}</p>
                             ${cDetails.categories.map(cat => `
-                                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 4px 0; border-top: 1px dashed var(--border);">
-                                    <span>${cat.name} ($${cat.price})</span>
-                                    <span style="color: ${cat.availableQuantity > 0 ? '#34d399' : '#f87171'}">${cat.availableQuantity}/${cat.totalQuantity} Vé</span>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 6px 0; border-top: 1px dashed var(--border);">
+                                    <span>${cat.name} — ${formatVND(cat.price)}</span>
+                                    <span style="color: ${cat.availableQuantity > 0 ? '#34d399' : '#f87171'}">${cat.availableQuantity}/${cat.totalQuantity} vé</span>
                                 </div>
                             `).join('')}
                         </div>
                     `;
                     listDiv.innerHTML += html;
 
-                    // Populate Select Options
                     cDetails.categories.forEach(cat => {
                         const opt = document.createElement('option');
                         opt.value = cat.id;
-                        opt.textContent = `${concert.title} - ${cat.name} ($${cat.price})`;
+                        opt.textContent = `${cat.name} — ${formatVND(cat.price)}`;
                         if (cat.availableQuantity <= 0) opt.disabled = true;
                         categorySelect.appendChild(opt);
                     });
                 }
             } catch (error) {
-                document.getElementById('concert-list').innerHTML = '<p class="error-text">Failed to load concerts.</p>';
+                document.getElementById('concert-list').innerHTML = '<p class="error-text">Không thể tải danh sách vé.</p>';
             }
         }
 
+        // Submit order
         async function submitOrder() {
             const btn = document.getElementById('book-btn');
             const resultBox = document.getElementById('result-box');
@@ -301,9 +457,10 @@
             };
 
             btn.disabled = true;
-            btn.innerHTML = '<div class="loader"></div> Processing...';
-            resultBox.innerHTML = 'Sending request...';
+            btn.innerHTML = '<div class="loader"></div> Đang xử lý...';
+            resultBox.innerHTML = 'Đang gửi yêu cầu...';
             resultBox.className = '';
+            updateFlowDiagram(2);
 
             try {
                 const res = await fetch(`${API_BASE}/orders`, {
@@ -317,24 +474,134 @@
                 resultBox.innerHTML = JSON.stringify(data, null, 2);
                 if (res.ok) {
                     resultBox.classList.add('success-text');
-                    // Refresh idempotency key for next order
                     document.getElementById('idempotencyKey').value = generateIdempotencyKey();
-                    // Refresh inventory
+                    
+                    // Add to local order list
+                    currentOrders.unshift({
+                        id: data.id,
+                        status: data.status,
+                        totalAmount: data.totalAmount,
+                        discountAmount: data.discountAmount,
+                        expiresAt: data.expiresAt
+                    });
+                    renderOrders();
                     fetchConcerts();
+                    updateFlowDiagram(3);
                 } else {
                     resultBox.classList.add('error-text');
+                    updateFlowDiagram(1);
                 }
             } catch (error) {
-                resultBox.innerHTML = `Error: ${error.message}`;
+                resultBox.innerHTML = `Lỗi: ${error.message}`;
                 resultBox.classList.add('error-text');
+                updateFlowDiagram(1);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = 'Confirm Booking';
+                btn.innerHTML = '🛒 Đặt vé';
             }
+        }
+
+        // Confirm payment
+        async function confirmPayment(orderId) {
+            const orderItem = document.getElementById(`order-${orderId}`);
+            const btn = orderItem.querySelector('.btn-confirm');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loader" style="width:14px;height:14px;border-width:2px;margin:0"></div>';
+            
+            updateFlowDiagram(3);
+
+            try {
+                const res = await fetch(`${API_BASE}/orders/${orderId}/confirm`, {
+                    method: 'PATCH'
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Update local state
+                    const order = currentOrders.find(o => o.id === orderId);
+                    if (order) order.status = 'Confirmed';
+                    renderOrders();
+                    fetchConcerts();
+                    updateFlowDiagram(4);
+
+                    // Show success in result box
+                    const resultBox = document.getElementById('result-box');
+                    resultBox.innerHTML = `✅ ${data.message}`;
+                    resultBox.className = 'success-text';
+                } else {
+                    alert(data.message || 'Thanh toán thất bại');
+                    btn.disabled = false;
+                    btn.innerHTML = '💳 Thanh toán';
+                }
+            } catch (error) {
+                alert('Lỗi kết nối: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = '💳 Thanh toán';
+            }
+        }
+
+        // Render order list
+        function renderOrders() {
+            const listDiv = document.getElementById('order-list');
+            
+            if (currentOrders.length === 0) {
+                listDiv.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 2rem;">Chưa có đơn hàng nào. Hãy đặt vé trước!</div>';
+                return;
+            }
+
+            listDiv.innerHTML = currentOrders.map(order => {
+                const countdown = order.status === 'Pending' ? getCountdown(order.expiresAt) : null;
+                const isPending = order.status === 'Pending' && countdown && !countdown.expired;
+
+                return `
+                    <div class="order-item" id="order-${order.id}">
+                        <div class="order-header">
+                            <div>
+                                ${getStatusBadge(order.status)}
+                                ${isPending ? `<span class="countdown" id="cd-${order.id}">${countdown.text}</span>` : ''}
+                            </div>
+                            <span class="order-amount">${formatVND(order.totalAmount)}</span>
+                        </div>
+                        <div class="order-id">🔑 ${order.id}</div>
+                        ${order.discountAmount > 0 ? `<div class="order-meta">🎟 Giảm giá: ${formatVND(order.discountAmount)}</div>` : ''}
+                        ${isPending ? `
+                            <div class="order-actions">
+                                <button class="btn-confirm" onclick="confirmPayment('${order.id}')">💳 Thanh toán</button>
+                            </div>
+                        ` : ''}
+                        ${order.status === 'Confirmed' ? '<div class="order-meta" style="color: var(--success);">✓ Đã thanh toán thành công</div>' : ''}
+                        ${(order.status === 'Pending' && countdown && countdown.expired) ? '<div class="order-meta" style="color: var(--danger);">✗ Đã hết hạn thanh toán</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+
+            // Start countdown updater
+            startCountdownUpdater();
+        }
+
+        // Countdown updater
+        function startCountdownUpdater() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                let needsRerender = false;
+                currentOrders.forEach(order => {
+                    if (order.status === 'Pending') {
+                        const cd = getCountdown(order.expiresAt);
+                        const el = document.getElementById(`cd-${order.id}`);
+                        if (el) {
+                            el.textContent = cd.text;
+                            if (cd.expired) needsRerender = true;
+                        }
+                    }
+                });
+                if (needsRerender) renderOrders();
+            }, 1000);
         }
 
         // Init
         fetchConcerts();
+        updateFlowDiagram(1);
     </script>
 </body>
 </html>

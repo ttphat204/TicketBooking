@@ -65,7 +65,7 @@ export class CreateOrderUseCase {
       voucherId,
       status: 'Pending',
       idempotencyKey: dto.idempotencyKey,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 3 * 60 * 1000), // 3 minutes
       createdAt: new Date(),
       items: [{
         id: 0, // Identity in DB
