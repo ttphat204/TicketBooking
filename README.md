@@ -74,7 +74,7 @@ npm run dev
 ## 📖 API Documentation
 
 Once the server is running, access the interactive Swagger UI at:
-👉 **[http://localhost:5000/api-docs](http://localhost:5000/api-docs)**
+👉 **[http://localhost:5000/api-docs](http://localhost:5000/swagger)**
 
 ---
 
